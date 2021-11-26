@@ -11,11 +11,11 @@ class AccountAPI extends RESTDataSource {
         return await this.post('/accounts', account);
     }
     async accountByUsername(username) {
-        return await this.get(`/accounts/${username}`);
+        return await this.get(`/account/${username}`);
     }
     async createTransaction(transaction) {
         transaction = new Object(JSON.parse(JSON.stringify(transaction)));
-        return await this.post('/transactions', transaction);
+        return await this.post('/transaction', transaction);
     }
     async transactionByUsername(username) {
         return await this.get(`/transactions/${username}`);
