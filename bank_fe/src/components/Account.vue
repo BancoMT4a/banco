@@ -1,17 +1,20 @@
 <template>
 
-    <div v-if="loaded" class="information">
+<!--     <div v-if="loaded" class="information">
         <h1>Información de su cuenta</h1>
         <h2>Nombre: <span>{{name}}</span></h2>
         <h2>Saldo: <span>{{balance}} COP </span></h2>
         <h2>Correo electrónico: <span>{{email}}</span></h2>
     </div>
+ -->
+
+<div></div>
 
 </template>
 
 
 <script>
-import jwt_decode from "jwt-decode";
+/* import jwt_decode from "jwt-decode";
 import axios from 'axios';
 
 export default {
@@ -65,12 +68,12 @@ export default {
     created: async function(){
         this.getData();
     },
-}
+} */
 </script>
 
 
 <style>
-    .information{
+    /* .information{
         margin: 0;
         padding: 0%;
         width: 100%;
@@ -95,5 +98,5 @@ export default {
     .information span{
         color: crimson;
         font-weight: bold;
-    }
+    } */
 </style>

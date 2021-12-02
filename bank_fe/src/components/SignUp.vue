@@ -2,30 +2,34 @@
   <div class="signUp_user">
     <div class="container_signUp_user">
       <h2>Registrarse</h2>
-            <form v-on:submit.prevent="processSignUp" >
-                <input type="text" v-model="user.username" placeholder="Username">
-                <br>
-                
-                <input type="password" v-model="user.password" placeholder="Password">
-                <br>
-                
-                <input type="text" v-model="user.name" placeholder="Name">
-                <br>
-
-                <input type="email" v-model="user.email" placeholder="Email">
-                <br>
-
-                <input type="number" v-model="user.account.balance" placeholder="Initial Balance">
-                <br>
-
-                <button type="submit">Registrarse</button>
-            </form>
+      <form v-on:submit.prevent="processSignUp">
+        <input type="text" v-model="user.username" placeholder="Usuario" />
+        <br />
+        <input
+          type="password"
+          v-model="user.password"
+          placeholder="Contraseña"
+        />
+        <input type="text" v-model="user.name" placeholder="Nombre" />
+        <br />
+        <input type="email" v-model="user.email" placeholder="Correo" />
+        <br />
+        <input
+          type="number"
+          v-model="user.balance"
+          placeholder="Saldo Inicial"
+        />
+        <br />
+        <button type="submit">Registrarse</button>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+
+import gql from "graphql-tag";
+
 export default {
   name: "SignUp",
   data: function () {
@@ -35,36 +39,41 @@ export default {
         password: "",
         name: "",
         email: "",
-        account: {
-          lastChangeDate: new Date().toJSON().toString(),
-          balance: 0,
-          isActive: true,
-        },
+        balance: 0,
       },
     };
   },
   methods: {
-    processSignUp: function () {
-      axios
-        .post("https://banco-be-mt.herokuapp.com/user/", this.user, {
-          headers: {},
+    processSignUp: async function () {
+      await this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation ($userInput: SignUpInput!) {
+              signUpUser(userInput: $userInput) {
+                refresh
+                access
+              }
+            }
+          `,
+          variables: {
+            userInput: this.user,
+          },
         })
         .then((result) => {
-          let dataSignUp = {
+          let dataLogIn = {
             username: this.user.username,
-            token_access: result.data.access,
-            token_refresh: result.data.refresh,
+            token_access: result.data.signUpUser.access,
+            token_refresh: result.data.signUpUser.refresh,
           };
-          alert("usuario creado con exito")
-          this.$emit("completedSignUp", dataSignUp);
+          this.$emit("completedSignUp", dataLogIn);
         })
         .catch((error) => {
-          console.log(error);
           alert("ERROR: Fallo en el registro.");
         });
     },
   },
 };
+
 </script>
 
 <style>
