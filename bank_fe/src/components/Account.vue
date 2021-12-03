@@ -1,102 +1,154 @@
 <template>
-
-<!--     <div v-if="loaded" class="information">
-        <h1>Información de su cuenta</h1>
-        <h2>Nombre: <span>{{name}}</span></h2>
-        <h2>Saldo: <span>{{balance}} COP </span></h2>
-        <h2>Correo electrónico: <span>{{email}}</span></h2>
+  <div id="Historial">
+    <div class="container">
+      <h2>
+        Titular Cuenta:
+        <span>{{ username }}</span>
+      </h2>
+      <h2>
+        Saldo:
+        <span>${{ accountByUsername.balance }} COP</span>
+      </h2>
+      <h2>
+        Último Movimiento:
+        <span>
+          {{ accountByUsername.lastChange.substring(0, 10) }}
+          {{ accountByUsername.lastChange.substring(11, 19) }}
+        </span>
+      </h2>
     </div>
- -->
-
-<div></div>
-
+    <h2>Transacciones</h2>
+    <div class="container-table">
+      <table>
+        <tr>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Origen</th>
+          <th>Destino</th>
+          <th>Valor</th>
+        </tr>
+        <tr v-for="transaction in transactionByUsername" :key="transaction.id">
+          <td>{{ transaction.date.substring(0, 10) }}</td>
+          <td>{{ transaction.date.substring(11, 19) }}</td>
+          <td>{{ transaction.usernameOrigin }}</td>
+          <td>{{ transaction.usernameDestiny }}</td>
+          <td>${{ transaction.value }} COP</td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </template>
 
-
 <script>
-/* import jwt_decode from "jwt-decode";
-import axios from 'axios';
-
+import gql from "graphql-tag";
 export default {
-    name: "Account",
-
-    data: function(){
+  name: "Account",
+  data: function () {
+    return {
+      username: localStorage.getItem("username") || "none",
+      transactionByUsername: [],
+      accountByUsername: {
+        balance: "",
+        lastChange: "",
+      },
+    };
+  },
+  apollo: {
+    transactionByUsername: {
+      query: gql`
+        query ($username: String!) {
+          transactionByUsername(username: $username) {
+            id
+            usernameOrigin
+            usernameDestiny
+            value
+            date
+          }
+        }
+      `,
+      variables() {
         return {
-            name: "",
-            email: "",
-            balance: 0,
-            loaded: false,
+          username: this.username,
+        };
+      },
+    },
+    accountByUsername: {
+      query: gql`
+        query ($username: String!) {
+          accountByUsername(username: $username) {
+            balance
+            lastChange
+          }
         }
+      `,
+      variables() {
+        return {
+          username: this.username,
+        };
+      },
     },
-
-    methods: {
-        getData: async function () {
-
-            if (localStorage.getItem("token_access") === null || localStorage.getItem("token_refresh") === null) {
-                this.$emit('logOut');
-                return;
-			}
-
-            await this.verifyToken();
-            
-            let token = localStorage.getItem("token_access");
-            let userId = jwt_decode(token).user_id.toString();
-            
-            axios.get(`https://banco-be-mt.herokuapp.com/user/${userId}/`, {headers: {'Authorization': `Bearer ${token}`}})
-                .then((result) => {
-                    this.name = result.data.name;
-                    this.email = result.data.email;	
-                    this.balance = result.data.account.balance;
-                    this.loaded = true;
-                    })
-                .catch(() => {
-                    this.$emit('logOut');
-                });
-        },
-
-        verifyToken: function () {
-            return axios.post("https://banco-be-mt.herokuapp.com/refresh/", {refresh: localStorage.getItem("token_refresh")}, {headers: {}})
-				.then((result) => {
-					localStorage.setItem("token_access", result.data.access);		
-				})
-				.catch(() => {
-					this.$emit('logOut');
-				});
-        }
-    },
-
-    created: async function(){
-        this.getData();
-    },
-} */
+  },
+  created: function () {
+    console.log("recarga....");
+    this.$apollo.queries.transactionByUsername.refetch();
+    this.$apollo.queries.accountByUsername.refetch();
+  },
+};
 </script>
 
-
 <style>
-    /* .information{
-        margin: 0;
-        padding: 0%;
-        width: 100%;
-        height: 100%;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: center;    
-        align-items: center;
-    }
-
-    .information h1{
-        font-size: 60px;
-        color: #0f1316;
-    }
-
-    .information h2{
-        font-size: 40px;
-        color: #283747;
-    }
-
-    .information span{
-        color: crimson;
-        font-weight: bold;
-    } */
+#Historial {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+}
+#Historial .container-table {
+  width: 50%;
+  max-height: 250px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#Historial table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+#Historial table td,
+#Historial table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+#Historial table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+#Historial table tr:hover {
+  background-color: #ddd;
+}
+#Historial table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: crimson;
+  color: white;
+}
+#Historial > h2 {
+  color: #283747;
+  font-size: 25px;
+}
+#Historial .container {
+  padding: 30px;
+  border: 3px solid rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  margin: 5% 0 1% 0;
+}
+#Historial .container h2 {
+  font-size: 25px;
+  color: #283747;
+}
+#Historial .container span {
+  color: crimson;
+  font-weight: bold;
+}
 </style>

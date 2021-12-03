@@ -5,6 +5,7 @@
       <nav>
         <button v-if="is_auth" v-on:click="loadHome">Inicio</button>
         <button v-if="is_auth" v-on:click="loadAccount">Cuenta</button>
+        <button v-if="is_auth" v-on:click="loadTransaction">Trasacción</button>
         <button v-if="is_auth" v-on:click="logOut">Cerrar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadLogIn">Iniciar Sesión</button>
         <button v-if="!is_auth" v-on:click="loadSignUp">Registrarse</button>
@@ -69,6 +70,9 @@ export default {
     loadAccount: function () {
       this.$router.push({ name: "account" });
     },
+    loadTransaction: function () {
+      this.$router.push({ name: "transaction" });
+    },
   },
   created: function () {
     this.verifyAuth();
@@ -98,7 +102,7 @@ body {
 }
 .header nav {
   height: 100%;
-  width: 20%;
+  width: 30%;
   display: flex;
   justify-content: space-around;
   align-items: center;
