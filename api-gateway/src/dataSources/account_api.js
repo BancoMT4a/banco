@@ -9,7 +9,7 @@ class AccountAPI extends RESTDataSource {
     async createAccount(account) {
         account = new Object(JSON.parse(JSON.stringify(account)));
         return await this.post('/accounts', account);
-    }
+        }
     async accountByUsername(username) {
         return await this.get(`/account/${username}`);
     }
@@ -19,6 +19,12 @@ class AccountAPI extends RESTDataSource {
     }
     async transactionByUsername(username) {
         return await this.get(`/transactions/${username}`);
+    }
+    async accountAll() {
+        return await this.get('/');
+    }
+    async deleteTransaction(id) {
+        return await this.delete(`/transaction/${id}`);
     }
 }
 module.exports = AccountAPI;

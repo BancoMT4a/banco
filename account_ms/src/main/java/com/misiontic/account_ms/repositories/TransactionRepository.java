@@ -9,5 +9,4 @@ import java.util.List;
 public interface TransactionRepository  extends MongoRepository<Transaction, String> {
     List<Transaction> findByUsernameOrigin(String usernameOrigin);
     List<Transaction> findByUsernameDestiny(String usernameDestiny);
-
 }

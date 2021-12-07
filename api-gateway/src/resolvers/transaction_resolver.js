@@ -15,6 +15,9 @@ const transactionResolver = {
                 return dataSources.accountAPI.createTransaction(transaction)
             else
                 return null
+        },
+        deleteTransactionById: (_, { id }, { dataSources }) => {
+            return dataSources.accountAPI.deleteTransaction(id);
         }
     }
 };

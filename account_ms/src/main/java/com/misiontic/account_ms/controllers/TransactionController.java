@@ -3,12 +3,12 @@ package com.misiontic.account_ms.controllers;
 import com.misiontic.account_ms.exceptions.AccountNotFoundException;
 import com.misiontic.account_ms.exceptions.InsufficientBalanceException;
 import com.misiontic.account_ms.models.Account;
+import com.misiontic.account_ms.models.DeleteResponse;
 import com.misiontic.account_ms.models.Transaction;
 import com.misiontic.account_ms.repositories.AccountRepository;
 import com.misiontic.account_ms.repositories.TransactionRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +19,7 @@ public class TransactionController {
 
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+
 
     public TransactionController(AccountRepository accountRepository,
                                  TransactionRepository transactionRepository){
@@ -75,6 +76,20 @@ public class TransactionController {
                 transactionsDestiny.stream()).collect(Collectors.toList());
 
         return transactions;
+
+    }
+
+    @DeleteMapping("/transaction/{id}")
+    public DeleteResponse deleteTransaction(@PathVariable String id){
+        DeleteResponse deleteResponse = new DeleteResponse();
+        if(transactionRepository.existsById(id)){
+            transactionRepository.deleteById(id);
+            deleteResponse.setResponse(true);
+            return deleteResponse;
+        }else{
+            deleteResponse.setResponse(false);
+            return deleteResponse;
+        }
 
     }
 }

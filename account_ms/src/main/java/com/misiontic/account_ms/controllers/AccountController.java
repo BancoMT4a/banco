@@ -5,6 +5,8 @@ import com.misiontic.account_ms.models.Account;
 import com.misiontic.account_ms.repositories.AccountRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class AccountController {
 
@@ -23,6 +25,11 @@ public class AccountController {
     @PostMapping("/accounts")
     Account newAccount(@RequestBody Account account){
         return accountRepository.save(account);
+    }
+
+    @GetMapping("/")
+    public List<Account> getAllAccounts(){
+        return accountRepository.findAll();
     }
 
 }

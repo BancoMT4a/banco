@@ -7,6 +7,10 @@ const accountResolver = {
             else
                 return null
         },
+
+        accountAll: async (_, { }, { dataSources }) => {
+            return await dataSources.accountAPI.accountAll()
+        },
     },
     Mutation: {}
 };

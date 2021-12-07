@@ -13,11 +13,18 @@ input TransactionInput {
     usernameDestiny: String!
     value: Int!
 }
+
+type Delete {
+    response: Boolean!
+}
+
 extend type Query {
     transactionByUsername(username: String!): [Transaction]
 }
 extend type Mutation {
     createTransaction(transaction: TransactionInput!): Transaction
+    deleteTransactionById(id: String!): Delete
+
 }`;
 
 module.exports = transactionTypeDefs;

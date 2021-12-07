@@ -8,6 +8,7 @@ type Account {
 }
 extend type Query {
     accountByUsername(username: String!): Account
+    accountAll: [Account]
 }`;
 
 module.exports = accountTypeDefs;
