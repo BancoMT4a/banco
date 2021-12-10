@@ -1,8 +1,12 @@
-FROM node:lts-alpine
-RUN npm install -g http-server
+FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 8080
-CMD ["npm", "run", "serve"]
+RUN npm run build
+FROM node:lts-alpine as production-stage
+WORKDIR /app
+COPY server.js .
+RUN npm install express serve-static
+COPY --from=build-stage /app/dist /app/dist
+CMD node server.js
